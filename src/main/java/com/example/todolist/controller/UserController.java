@@ -23,9 +23,12 @@ public class UserController {
         this.taskService = taskService;
     }
 
-    @PostMapping
-    public void createTask(@RequestBody Task task) {
-        taskService.saveTask(task);
+    @GetMapping("/current")
+    public ResponseEntity<User> getCurrentUser(
+            @CurrentUser User user
+    ) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(user);
     }
 
     @GetMapping("/")
@@ -97,4 +100,6 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .body(new ApiResponse(true, "Task successfully deleted."));
     }
+
+
 }
