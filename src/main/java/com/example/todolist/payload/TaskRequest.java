@@ -11,6 +11,7 @@ public class TaskRequest {
     private String title;
     private Long category_id;
     private Priority priority;
+    private String description;
 
     private LocalDateTime startAt;
     private LocalDateTime endAt;

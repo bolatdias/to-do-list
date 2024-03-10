@@ -4,30 +4,31 @@ import com.example.todolist.model.Category;
 import com.example.todolist.model.Task;
 import com.example.todolist.model.User;
 import com.example.todolist.payload.CategoryRequest;
+import com.example.todolist.payload.CategoryFullResponse;
 import com.example.todolist.payload.CategoryResponse;
 import com.example.todolist.payload.TaskResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CategoryWrapper {
+public class CategoryMapper {
 
-    public static CategoryResponse convertToResponse(Category category) {
-        CategoryResponse categoryResponse = new CategoryResponse();
+    public static CategoryFullResponse convertToResponse(Category category) {
+        CategoryFullResponse categoryFullResponse = new CategoryFullResponse();
 
         List<Task> taskSet = category.getTasks();
         List<TaskResponse> taskResponses = new ArrayList<>();
         for (Task task : taskSet) {
 
-            TaskResponse taskResponse = TaskWrapper.convertToResponse(task);
+            TaskResponse taskResponse = TaskMapper.convertToResponse(task);
             taskResponses.add(taskResponse);
         }
 
-        categoryResponse.setId(category.getId());
-        categoryResponse.setTitle(category.getTitle());
-        categoryResponse.setTasks(taskResponses);
+        categoryFullResponse.setId(category.getId());
+        categoryFullResponse.setTitle(category.getTitle());
+        categoryFullResponse.setTasks(taskResponses);
 
-        return categoryResponse;
+        return categoryFullResponse;
     }
 
 
@@ -41,5 +42,12 @@ public class CategoryWrapper {
 
     public static void updateModel(CategoryRequest request, Category category) {
         category.setTitle(request.getTitle());
+    }
+
+    public static CategoryResponse convertToModel(Category category) {
+        CategoryResponse categoryResponse = new CategoryResponse();
+        categoryResponse.setTitle(category.getTitle());
+        categoryResponse.setId(category.getId());
+        return categoryResponse;
     }
 }

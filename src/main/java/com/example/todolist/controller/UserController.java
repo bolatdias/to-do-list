@@ -30,15 +30,15 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<CategoryResponse>> getAllTask(
+    public ResponseEntity<List<CategoryFullResponse>> getAllTask(
             @CurrentUser User currentUser
     ) {
 
-        List<CategoryResponse> categoryResponseList = taskService.getAllTasksByUserId(currentUser.getId());
+        List<CategoryFullResponse> categoryFullResponseList = taskService.getAllTasksByUserId(currentUser.getId());
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(categoryResponseList);
+                .body(categoryFullResponseList);
     }
 
     @GetMapping("task/{id}")
@@ -113,4 +113,14 @@ public class UserController {
                 .body(new ApiResponse(true, "Task successfully updated."));
     }
 
+    @GetMapping("/category")
+    public ResponseEntity<?> getCategories(
+            @CurrentUser User user
+    ) {
+        List<CategoryResponse> categoryResponseList = taskService.getCategories(user);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(categoryResponseList);
+    }
 }

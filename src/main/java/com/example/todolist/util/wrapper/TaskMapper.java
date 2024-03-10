@@ -5,7 +5,7 @@ import com.example.todolist.model.Task;
 import com.example.todolist.payload.TaskRequest;
 import com.example.todolist.payload.TaskResponse;
 
-public class TaskWrapper {
+public class TaskMapper {
 
     public static Task convertToModel(TaskRequest taskRequest, Category category) {
         Task task = new Task();
@@ -15,6 +15,7 @@ public class TaskWrapper {
         task.setPriority(taskRequest.getPriority());
         task.setEndAt(taskRequest.getEndAt());
         task.setStartAt(taskRequest.getStartAt());
+        task.setDescription(taskRequest.getDescription());
 
         return task;
     }
@@ -27,6 +28,8 @@ public class TaskWrapper {
         taskResponse.setPriority(task.getPriority());
         taskResponse.setStartAt(task.getStartAt());
         taskResponse.setEndAt(task.getEndAt());
+        taskResponse.setDescription(task.getDescription());
+
         return taskResponse;
     }
 
@@ -37,6 +40,6 @@ public class TaskWrapper {
         task.setPriority(taskRequest.getPriority());
         task.setEndAt(taskRequest.getEndAt());
         task.setStartAt(taskRequest.getStartAt());
-
+        task.setDescription(taskRequest.getDescription());
     }
 }

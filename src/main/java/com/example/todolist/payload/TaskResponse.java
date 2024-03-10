@@ -11,6 +11,7 @@ public class TaskResponse {
     private Long id;
     private String title;
     private Priority priority;
+    private String description;
 
     private LocalDateTime startAt;
     private LocalDateTime endAt;
