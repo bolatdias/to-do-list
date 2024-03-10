@@ -1,8 +1,6 @@
 package com.example.todolist.controller;
 
 
-import com.example.todolist.model.Category;
-import com.example.todolist.model.Task;
 import com.example.todolist.model.User;
 import com.example.todolist.payload.*;
 import com.example.todolist.security.CurrentUser;
@@ -57,7 +55,7 @@ public class UserController {
             @CurrentUser User user
 
     ) {
-        taskService.saveCategory(categoryRequest, user);
+        taskService.createCategory(categoryRequest, user);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ApiResponse(true, "Category successfully created."));
@@ -75,8 +73,8 @@ public class UserController {
                 .body(new ApiResponse(true, "Task successfully created."));
     }
 
-    @PatchMapping("/task/{id}")
-    public ResponseEntity<ApiResponse> update(
+    @PutMapping("/task/{id}")
+    public ResponseEntity<ApiResponse> updateTask(
             @RequestBody TaskRequest taskRequest,
             @CurrentUser User user,
             @PathVariable Long id
@@ -101,5 +99,18 @@ public class UserController {
                 .body(new ApiResponse(true, "Task successfully deleted."));
     }
 
+
+    @PutMapping("/category/{id}")
+    public ResponseEntity<ApiResponse> updateCategory(
+            @RequestBody CategoryRequest categoryRequest,
+            @CurrentUser User user,
+            @PathVariable Long id
+    ) {
+        taskService.updateCategory(categoryRequest, user, id);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(new ApiResponse(true, "Task successfully updated."));
+    }
 
 }

@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+
 
 @Data
 @Entity
@@ -17,6 +20,10 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     private Priority priority;
+
+
+    private LocalDateTime startAt;
+    private LocalDateTime endAt;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

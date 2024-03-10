@@ -14,7 +14,6 @@ import java.util.Optional;
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-
     @Query("SELECT t FROM Task t JOIN t.category c WHERE c.user = :user AND t.id = :id")
     Optional<Task> existsByUser(@Param("user") User user, @Param("id") Long id);
 }
