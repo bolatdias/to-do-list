@@ -5,20 +5,25 @@ import com.example.todolist.model.Priority;
 import com.example.todolist.model.User;
 import com.example.todolist.payload.*;
 import com.example.todolist.security.CurrentUser;
+import com.example.todolist.service.ImageService;
 import com.example.todolist.service.TaskService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-
+    private final ImageService imageService;
     private final TaskService taskService;
 
-    public UserController(TaskService taskService) {
+    public UserController(ImageService imageService, TaskService taskService) {
+        this.imageService = imageService;
         this.taskService = taskService;
     }
 
@@ -45,7 +50,7 @@ public class UserController {
         searchFilter.setTitle(title);
         searchFilter.setCategoryId(categoryId);
 
-        TaskPageableResponse categoryFullResponseList = taskService.getAllTasksByUserId(currentUser, page, size,searchFilter);
+        TaskPageableResponse categoryFullResponseList = taskService.getAllTasksByUserId(currentUser, page, size, searchFilter);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -92,6 +97,7 @@ public class UserController {
     ) {
         taskService.updateTask(taskRequest, user, id);
 
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new ApiResponse(true, "Task successfully updated."));
@@ -134,4 +140,34 @@ public class UserController {
                 .status(HttpStatus.OK)
                 .body(categoryResponseList);
     }
+
+    @PostMapping("/image")
+    public ResponseEntity<ApiResponse> uploadImage(
+            @RequestParam("image") MultipartFile file,
+            @CurrentUser User user
+    ) {
+        try {
+            imageService.uploadImage(file, user);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ApiResponse(true, "Image uploaded successfully: " +
+                        file.getOriginalFilename()));
+    }
+
+    @GetMapping("/image")
+    public ResponseEntity<?> getImage(
+            @CurrentUser User user
+    ) throws IOException {
+
+        byte[] imageData = imageService.getImage(user.getImage().getId());
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.valueOf("image/png"))
+                .body(imageData);
+    }
 }
+
