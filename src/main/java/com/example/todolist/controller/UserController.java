@@ -1,6 +1,7 @@
 package com.example.todolist.controller;
 
 
+import com.example.todolist.model.Priority;
 import com.example.todolist.model.User;
 import com.example.todolist.payload.*;
 import com.example.todolist.security.CurrentUser;
@@ -30,11 +31,21 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<CategoryFullResponse>> getAllTask(
-            @CurrentUser User currentUser
+    public ResponseEntity<TaskPageableResponse> getAllTask(
+            @CurrentUser User currentUser,
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "15") int size,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) Priority priority,
+            @RequestParam(required = false) Long categoryId
     ) {
 
-        List<CategoryFullResponse> categoryFullResponseList = taskService.getAllTasksByUserId(currentUser.getId());
+        SearchFilter searchFilter = new SearchFilter();
+        searchFilter.setPriority(priority);
+        searchFilter.setTitle(title);
+        searchFilter.setCategoryId(categoryId);
+
+        TaskPageableResponse categoryFullResponseList = taskService.getAllTasksByUserId(currentUser, page, size,searchFilter);
 
         return ResponseEntity
                 .status(HttpStatus.OK)

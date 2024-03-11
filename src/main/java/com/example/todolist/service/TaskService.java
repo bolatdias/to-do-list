@@ -11,6 +11,9 @@ import com.example.todolist.repository.CategoryRepository;
 import com.example.todolist.repository.TaskRepository;
 import com.example.todolist.util.wrapper.CategoryMapper;
 import com.example.todolist.util.wrapper.TaskMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
@@ -33,19 +36,28 @@ public class TaskService {
 
     public TaskResponse getTaskById(Long id) {
         Task task = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task not founded."));
-
-        return TaskMapper.convertToResponse(task);
+        return TaskMapper.convertToResponse(task, task.getCategory());
     }
 
 
-    public List<CategoryFullResponse> getAllTasksByUserId(Long id) {
-        List<CategoryFullResponse> categoryFullResponseList = new ArrayList<>();
+    public TaskPageableResponse getAllTasksByUserId(User user, int page, int pageSize, SearchFilter searchFilter) {
+        TaskPageableResponse taskPageableResponse = new TaskPageableResponse();
+        List<TaskResponse> taskResponses = new ArrayList<>();
 
-        Set<Category> categoryList = categoryRepository.findByUserId(id);
-        for (Category category : categoryList) {
-            categoryFullResponseList.add(CategoryMapper.convertToResponse(category));
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Task> taskPage = taskRepository.findAllByUser(user, pageable, searchFilter);
+        List<Task> taskList = taskPage.getContent();
+
+        for (Task task : taskList) {
+            TaskResponse taskResponse = TaskMapper.convertToResponse(task, task.getCategory());
+            taskResponses.add(taskResponse);
         }
-        return categoryFullResponseList;
+
+        taskPageableResponse.setTotalPages(taskPage.getTotalPages());
+        taskPageableResponse.setTotalElements(taskPage.getTotalElements());
+        taskPageableResponse.setTask(taskResponses);
+
+        return taskPageableResponse;
     }
 
 
@@ -117,7 +129,7 @@ public class TaskService {
 
         Set<Category> categoryList = categoryRepository.findByUserId(user.getId());
         for (Category c : categoryList) {
-            categoryResponseList.add(CategoryMapper.convertToModel(c));
+            categoryResponseList.add(CategoryMapper.convertToResponse(c));
         }
         return categoryResponseList;
     }

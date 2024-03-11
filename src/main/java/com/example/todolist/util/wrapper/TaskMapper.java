@@ -20,7 +20,7 @@ public class TaskMapper {
         return task;
     }
 
-    public static TaskResponse convertToResponse(Task task) {
+    public static TaskResponse convertToResponse(Task task, Category category) {
         TaskResponse taskResponse = new TaskResponse();
 
         taskResponse.setId(task.getId());
@@ -29,6 +29,8 @@ public class TaskMapper {
         taskResponse.setStartAt(task.getStartAt());
         taskResponse.setEndAt(task.getEndAt());
         taskResponse.setDescription(task.getDescription());
+
+        taskResponse.setCategoryResponse(CategoryMapper.convertToResponse(category));
 
         return taskResponse;
     }

@@ -13,23 +13,23 @@ import java.util.List;
 
 public class CategoryMapper {
 
-    public static CategoryFullResponse convertToResponse(Category category) {
-        CategoryFullResponse categoryFullResponse = new CategoryFullResponse();
-
-        List<Task> taskSet = category.getTasks();
-        List<TaskResponse> taskResponses = new ArrayList<>();
-        for (Task task : taskSet) {
-
-            TaskResponse taskResponse = TaskMapper.convertToResponse(task);
-            taskResponses.add(taskResponse);
-        }
-
-        categoryFullResponse.setId(category.getId());
-        categoryFullResponse.setTitle(category.getTitle());
-        categoryFullResponse.setTasks(taskResponses);
-
-        return categoryFullResponse;
-    }
+//    public static CategoryFullResponse convertToResponse(Category category) {
+//        CategoryFullResponse categoryFullResponse = new CategoryFullResponse();
+//
+//        List<Task> taskSet = category.getTasks();
+//        List<TaskResponse> taskResponses = new ArrayList<>();
+//        for (Task task : taskSet) {
+//
+//            TaskResponse taskResponse = TaskMapper.convertToResponse(task, task.getCategory());
+//            taskResponses.add(taskResponse);
+//        }
+//
+//        categoryFullResponse.setId(category.getId());
+//        categoryFullResponse.setTitle(category.getTitle());
+//        categoryFullResponse.setTasks(taskResponses);
+//
+//        return categoryFullResponse;
+//    }
 
 
     public static Category convertToModel(CategoryRequest categoryRequest, User user) {
@@ -44,7 +44,7 @@ public class CategoryMapper {
         category.setTitle(request.getTitle());
     }
 
-    public static CategoryResponse convertToModel(Category category) {
+    public static CategoryResponse convertToResponse(Category category) {
         CategoryResponse categoryResponse = new CategoryResponse();
         categoryResponse.setTitle(category.getTitle());
         categoryResponse.setId(category.getId());
