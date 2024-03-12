@@ -4,6 +4,7 @@ package com.example.todolist.service;
 import com.example.todolist.exception.AccessDeniedException;
 import com.example.todolist.exception.ResourceNotFoundException;
 import com.example.todolist.model.Category;
+import com.example.todolist.model.Priority;
 import com.example.todolist.model.Task;
 import com.example.todolist.model.User;
 import com.example.todolist.payload.*;
@@ -134,6 +135,44 @@ public class TaskService {
         return categoryResponseList;
     }
 
+    public List<CategoryCountResponse> getCategoriesCount(User user) {
+        List<CategoryCountResponse> categoryCountResponseList = new ArrayList<>();
+        List<Object[]> objectsList = categoryRepository.findByUserIdWithCount(user.getId());
+
+        for (Object[] objectArray : objectsList) {
+            Category category = (Category) objectArray[0];
+            Long count = (Long) objectArray[1];
+
+            CategoryCountResponse categoryCountResponse = new CategoryCountResponse();
+            categoryCountResponse.setId(category.getId());
+            categoryCountResponse.setTitle(category.getTitle());
+            categoryCountResponse.setCount(count);
+
+            categoryCountResponseList.add(categoryCountResponse);
+        }
+
+        return categoryCountResponseList;
+    }
+
+
+    public List<PrioretyInfoResponse> getPrioretyInfo(User user) {
+        List<PrioretyInfoResponse> prioretyInfoResponseList = new ArrayList<>();
+
+        List<Object[]> objectList = taskRepository.countTasksByPriorityAndUserId(user.getId());
+
+        for (Object[] objects : objectList) {
+            Priority priority = (Priority) objects[0];
+            Long count = (Long) objects[1];
+
+            PrioretyInfoResponse prioretyInfoResponse = new PrioretyInfoResponse();
+            prioretyInfoResponse.setCount(count);
+            prioretyInfoResponse.setPriority(priority);
+
+            prioretyInfoResponseList.add(prioretyInfoResponse);
+        }
+
+        return prioretyInfoResponseList;
+    }
 }
 
 

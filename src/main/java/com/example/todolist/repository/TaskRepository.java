@@ -21,6 +21,9 @@ public interface TaskRepository extends PagingAndSortingRepository<Task, Long>, 
     @Query("SELECT t FROM Task t JOIN t.category c WHERE c.user = :user AND t.id = :id")
     Optional<Task> existsByUser(@Param("user") User user, @Param("id") Long id);
 
+    @Query("SELECT t.priority, COUNT(t) FROM Category c LEFT JOIN c.tasks t LEFT JOIN User u ON " +
+            "c.user.id = u.id AND u.id = :userId GROUP BY t.priority")
+    List<Object[]> countTasksByPriorityAndUserId(@Param("userId") Long userId);
     @Query("SELECT t FROM Task t JOIN t.category c WHERE c.user = :user " +
             "AND (:#{#filter.title} IS NULL OR t.title LIKE %:#{#filter.title}%) " +
             "AND (:#{#filter.priority} IS NULL OR t.priority = :#{#filter.priority}) " +

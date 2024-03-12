@@ -169,5 +169,27 @@ public class UserController {
                 .contentType(MediaType.valueOf("image/png"))
                 .body(imageData);
     }
+
+    @GetMapping("/category/info")
+    public ResponseEntity<?> getCategoryStatistic(
+            @CurrentUser User user
+    ) {
+        List<CategoryCountResponse> categoryCountResponseList = taskService.getCategoriesCount(user);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(categoryCountResponseList);
+    }
+
+    @GetMapping("/priority/info")
+    public ResponseEntity<?> getPriorityInfo(
+            @CurrentUser User user
+    ) {
+        List<PrioretyInfoResponse> prioretyInfoResponseList = taskService.getPrioretyInfo(user);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(prioretyInfoResponseList);
+    }
 }
 
