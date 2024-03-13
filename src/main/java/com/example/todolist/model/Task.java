@@ -16,12 +16,15 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull
     private String title;
 
     @Column(length = 5000)
     private String description;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private Priority priority;
 
 

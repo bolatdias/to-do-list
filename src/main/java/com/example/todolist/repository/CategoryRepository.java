@@ -22,7 +22,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     Set<Category> findByUserId(Long userId);
 
     @Query("SELECT c, COUNT(t) FROM Category c LEFT JOIN c.tasks t LEFT JOIN User u ON " +
-            "c.user.id = u.id AND u.id = :userId GROUP BY c")
+            "c.user.id = u.id WHERE c.user.id = :userId GROUP BY c")
     List<Object[]> findByUserIdWithCount(@Param("userId") Long userId);
 
 }
